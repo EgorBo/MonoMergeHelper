@@ -38,6 +38,8 @@ namespace CorefxImportHelper
             set
             {
                 Set(nameof(SelectedRootFile), ref _selectedRootFile, value);
+                RootFileContentHistory = new Stack<List<string>>();
+                DumpRootFile();
                 ReloadSourceFiles();
             }
         }
@@ -66,7 +68,8 @@ namespace CorefxImportHelper
                 .Concat(Directory.GetFiles(Path.Combine(MonoRootFolder, "external", "corert"), "*.cs", SearchOption.AllDirectories))
                 .ToList();
 
-            var items = File.ReadAllLines(SelectedRootFile).Select(i => new SourceItemViewModel(i, this));
+            var fileItems = File.ReadAllLines(SelectedRootFile).ToList();
+            var items = fileItems.Select(i => new SourceItemViewModel(i, this));
             SourceItems = new ObservableCollection<SourceItemViewModel>(items);
         }
 
@@ -79,6 +82,30 @@ namespace CorefxImportHelper
             {
                 SelectedRootFile = dlg.FileName;
             }
+        }
+
+        public Stack<List<string>> RootFileContentHistory { get; private set; }
+
+        public void DumpRootFile()
+        {
+            RootFileContentHistory.Push(File.ReadAllLines(SelectedRootFile).ToList());
+        }
+
+        public void UndoLastAction()
+        {
+            List<string> content;
+
+            if (RootFileContentHistory.Count > 1)
+                RootFileContentHistory.Pop();
+
+            if (RootFileContentHistory.Count > 1)
+                content = RootFileContentHistory.Pop();
+            else
+                content = RootFileContentHistory.Peek();
+
+            var srf = SelectedRootFile;
+            File.WriteAllText(srf, string.Join("\n", content) + "\n");
+            ReloadSourceFiles();
         }
     }
 }

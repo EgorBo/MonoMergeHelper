@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CorefxImportHelper"
         xmlns:wpfDiffView="clr-namespace:WpfDiffView;assembly=WpfDiffView"
-        mc:Ignorable="d"
+        mc:Ignorable="d" PreviewKeyDown="MainWindow_OnPreviewKeyDown"
         Title="CoreFX/RT Import Helper" Height="800" Width="1400">
     <Grid>
         <Grid.RowDefinitions>
@@ -16,7 +16,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Text="{Binding SelectedRootFile}" Foreground="DarkGray"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Text="{Binding SelectedRootFile}" Foreground="#4B4B4B"/>
         <Button Content="    Browse    " Command="{Binding Browse}" Margin="0,0,0,0"/>
 
         <Grid Grid.Row="1" Grid.ColumnSpan="2">
@@ -26,7 +26,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
 
 
@@ -40,6 +40,12 @@
                         <DataTemplate.Triggers>
                             <DataTrigger Binding="{Binding IsNew}" Value="True">
                                 <Setter TargetName="SourceItemTb" Property="FontWeight" Value="Bold"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding HasCandidates}" Value="True">
+                                <Setter TargetName="SourceItemTb" Property="Foreground" Value="Blue"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsNetCore}" Value="True">
+                                <Setter TargetName="SourceItemTb" Property="Foreground" Value="DarkGray"/>
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
@@ -70,7 +76,10 @@
             
             <TextBlock Text="Candidates in CoreFX and CoreRT:" HorizontalAlignment="Center" FontSize="20" Margin="6,0,0,0" Grid.Column="1" VerticalAlignment="Top" Foreground="Gray"/>
 
-            <wpfDiffView:DiffView x:Name="DiffView" LeftText="{Binding SelectedSourceItem.Content}" RightText="{Binding SelectedSourceItem.SelectedCandidateItem.Content}" Grid.Column="1" Grid.Row="1"/>
+            <wpfDiffView:DiffView x:Name="DiffView" 
+                                  LeftText="{Binding SelectedSourceItem.Content}" 
+                                  RightText="{Binding SelectedSourceItem.SelectedCandidateItem.Content}" 
+                                  Grid.Column="1" Grid.Row="1"/>
 
             <GridSplitter Grid.Column="1" Grid.RowSpan="2"
                           HorizontalAlignment="Left" 

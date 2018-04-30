@@ -21,6 +21,10 @@ namespace CorefxImportHelper
 
         public bool IsNew { get; }
 
+        //public bool HasCandidates => !IsNetCore && Candidates.Any();
+
+        public bool IsNetCore => Path.Contains("../external/core");
+
         public MainViewModel MainViewModel { get; }
 
         public string Content
@@ -57,6 +61,7 @@ namespace CorefxImportHelper
             var fileName = System.IO.Path.GetFileName(monoFile);
             var similarFiles = MainViewModel.AllCorefxAndCorertFiles
                 .Where(f => System.IO.Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase))
+                .Where(f => !f.Contains("/tests/"))
                 .Select(f => new CandidateItemViewModel(PathExtensions.GetRelativePath(f, System.IO.Path.GetDirectoryName(MainViewModel.SelectedRootFile)).ToUnixPath(), f, OnRunExternalDiff, OnUseMe))
                 .ToArray();
             // TODO: parse CS files, find structs/enums/classes
@@ -87,8 +92,9 @@ namespace CorefxImportHelper
                 return;
             }
 
-            File.WriteAllLines(MainViewModel.SelectedRootFile, fileLines);
+            File.WriteAllText(MainViewModel.SelectedRootFile, string.Join("\n", fileLines) + "\n");
             MainViewModel.SourceItems[index] = new SourceItemViewModel(candidateMonoStyle, MainViewModel, true);
+            MainViewModel.DumpRootFile();
         }
 
         void OnRunExternalDiff(string candidate)

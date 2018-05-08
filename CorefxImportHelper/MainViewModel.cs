@@ -44,6 +44,8 @@ namespace CorefxImportHelper
             }
         }
 
+        public string NamespaceOfInterest => "System"; // in my current PR I am interesting only in types under this namespace so I want the tool to hightlight files with it inside
+
         public SourceItemViewModel SelectedSourceItem
         {
             get => _selectedSourceItem;

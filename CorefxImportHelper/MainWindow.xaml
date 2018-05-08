@@ -30,7 +30,15 @@
             </Grid.RowDefinitions>
 
 
-            <ListBox x:Name="SourceItems" FontSize="11" Grid.RowSpan="2"
+            <TextBlock Grid.Row="1" VerticalAlignment="Bottom" >
+                <Run Text="Namespace of interest:"/>
+                <Bold>
+                    <Run Text="{Binding NamespaceOfInterest, Mode=OneWay}" />
+                </Bold>
+                <Run Text="(items with blue icone)"/>
+            </TextBlock>
+
+            <ListBox x:Name="SourceItems" FontSize="11" Grid.RowSpan="2" Margin="0,0,0,20"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                      SelectedItem="{Binding SelectedSourceItem}"
                      ItemsSource="{Binding SourceItems}">
@@ -42,7 +50,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Border Visibility="Collapsed" x:Name="siLabel" Width="12" Height="12" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#8BFF0000"/>
+                            <Border Visibility="Collapsed" x:Name="siLabel" Width="12" Height="12" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#8B00B8FF"/>
                             <TextBlock x:Name="SourceItemTb" Grid.Column="1" Text="{Binding .}"/>
                             <TextBlock x:Name="siComment" Grid.Column="2" Foreground="DarkOrange" Margin="6,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Comments}"/>
                         </Grid>
@@ -56,7 +64,7 @@
                             <DataTrigger Binding="{Binding IsNetCore}" Value="True">
                                 <Setter TargetName="SourceItemTb" Property="Foreground" Value="DarkGray"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding IsSystemNamespace}" Value="True">
+                            <DataTrigger Binding="{Binding IsNamespaceOfInterest}" Value="True">
                                 <Setter TargetName="siLabel" Property="Visibility" Value="Visible"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding IsNotValidFile}" Value="True">

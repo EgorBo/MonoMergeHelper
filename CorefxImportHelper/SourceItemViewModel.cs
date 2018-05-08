@@ -27,7 +27,7 @@ namespace CorefxImportHelper
 
         public bool IsNotValidFile => string.IsNullOrWhiteSpace(Path) || Path.StartsWith("#") || Path.Contains("/*");
 
-        public bool IsSystemNamespace
+        public bool IsNamespaceOfInterest
         {
             get
             {
@@ -35,10 +35,13 @@ namespace CorefxImportHelper
                     return false;
 
                 var c = Content;
-                if (c.Contains("namespace System\n") || c.Contains("namespace System\r") || c.Contains("namespace System ") || c.Contains("namespace System\t"))
+                string[] endings = {"\n", "\t", " ", "\r"};
+                foreach (var ending in endings)
                 {
-                    return true;
+                    if (c.Contains(MainViewModel.NamespaceOfInterest + ending))
+                        return true;
                 }
+
                 return false;
             }
         }

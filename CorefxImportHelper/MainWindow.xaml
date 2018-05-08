@@ -36,7 +36,16 @@
                      ItemsSource="{Binding SourceItems}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock x:Name="SourceItemTb" Text="{Binding .}"/>
+                        <Grid x:Name="siGrid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Visibility="Collapsed" x:Name="siLabel" Width="12" Height="12" Margin="0,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#8BFF0000"/>
+                            <TextBlock x:Name="SourceItemTb" Grid.Column="1" Text="{Binding .}"/>
+                            <TextBlock x:Name="siComment" Grid.Column="2" Foreground="DarkOrange" Margin="6,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Comments}"/>
+                        </Grid>
                         <DataTemplate.Triggers>
                             <DataTrigger Binding="{Binding IsNew}" Value="True">
                                 <Setter TargetName="SourceItemTb" Property="FontWeight" Value="Bold"/>
@@ -45,6 +54,12 @@
                                 <Setter TargetName="SourceItemTb" Property="Foreground" Value="Blue"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding IsNetCore}" Value="True">
+                                <Setter TargetName="SourceItemTb" Property="Foreground" Value="DarkGray"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsSystemNamespace}" Value="True">
+                                <Setter TargetName="siLabel" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsNotValidFile}" Value="True">
                                 <Setter TargetName="SourceItemTb" Property="Foreground" Value="DarkGray"/>
                             </DataTrigger>
                         </DataTemplate.Triggers>
@@ -60,7 +75,7 @@
                      ItemsSource="{Binding SelectedSourceItem.Candidates}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid HorizontalAlignment="Stretch">
+                        <Grid HorizontalAlignment="Stretch" Background="#48ADFF2F">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>

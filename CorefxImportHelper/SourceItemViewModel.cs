@@ -21,9 +21,27 @@ namespace CorefxImportHelper
 
         public bool IsNew { get; }
 
-        //public bool HasCandidates => !IsNetCore && Candidates.Any();
+        public bool HasCandidates => !IsNetCore && Candidates.Any();
 
         public bool IsNetCore => Path.Contains("../external/core");
+
+        public bool IsNotValidFile => string.IsNullOrWhiteSpace(Path) || Path.StartsWith("#") || Path.Contains("/*");
+
+        public bool IsSystemNamespace
+        {
+            get
+            {
+                if (IsNotValidFile)
+                    return false;
+
+                var c = Content;
+                if (c.Contains("namespace System\n") || c.Contains("namespace System\r") || c.Contains("namespace System ") || c.Contains("namespace System\t"))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
 
         public MainViewModel MainViewModel { get; }
 
@@ -31,12 +49,28 @@ namespace CorefxImportHelper
         {
             get
             {
+                if (IsNotValidFile)
+                    return "<NOT A VALID FILE>";
+
                 if (string.IsNullOrEmpty(Path))
                     return string.Empty;
                 var path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(MainViewModel.SelectedRootFile), Path.ToOsPath());
                 return File.ReadAllText(path);
             }
             set { }
+        }
+
+        public string Comments
+        {
+            get
+            {
+                if (IsNotValidFile)
+                    return "";
+                var c = Content;
+                if (c.Contains("MONO") || c.Contains("MOBILE") || c.Contains("_AOT_")) //todo: regex it
+                    return "(contains `MONO` #ifdefs)";
+                return "";
+            }
         }
 
         public string Path { get; set; }
@@ -61,7 +95,7 @@ namespace CorefxImportHelper
             var fileName = System.IO.Path.GetFileName(monoFile);
             var similarFiles = MainViewModel.AllCorefxAndCorertFiles
                 .Where(f => System.IO.Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase))
-                .Where(f => !f.Contains("/tests/"))
+                .Where(f => !f.Contains("tests" + System.IO.Path.DirectorySeparatorChar))
                 .Select(f => new CandidateItemViewModel(PathExtensions.GetRelativePath(f, System.IO.Path.GetDirectoryName(MainViewModel.SelectedRootFile)).ToUnixPath(), f, OnRunExternalDiff, OnUseMe))
                 .ToArray();
             // TODO: parse CS files, find structs/enums/classes

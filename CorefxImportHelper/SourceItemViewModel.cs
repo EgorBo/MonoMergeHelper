@@ -3,11 +3,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using GalaSoft.MvvmLight;
 
 namespace CorefxImportHelper
 {
-    public class SourceItemViewModel : ViewModelBase
+    public class SourceItemViewModel : ViewModelBase, ISourceFile
     {
         private CandidateItemViewModel _selectedCandidateItem;
         private ObservableCollection<CandidateItemViewModel> _candidates;
@@ -57,8 +58,7 @@ namespace CorefxImportHelper
 
                 if (string.IsNullOrEmpty(Path))
                     return string.Empty;
-                var path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(MainViewModel.SelectedRootFile), Path.ToOsPath());
-                return File.ReadAllText(path);
+                return File.ReadAllText(AbsolutePath);
             }
             set { }
         }
@@ -76,7 +76,11 @@ namespace CorefxImportHelper
             }
         }
 
+        public string AbsolutePath => System.IO.Path.Combine(System.IO.Path.GetDirectoryName(MainViewModel.SelectedRootFile), Path.ToOsPath());
+
         public string Path { get; set; }
+
+        public string MonoPath => Path; 
 
         public string ShortForm => Path.ShortUnixPathToLong(75);
 

@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
+using RelayCommand = GalaSoft.MvvmLight.Command.RelayCommand;
 
 namespace CorefxImportHelper
 {
@@ -56,6 +60,22 @@ namespace CorefxImportHelper
                     SelectedSourceItem.SelectedCandidateItem = SelectedSourceItem.Candidates.FirstOrDefault();
             }
         }
+
+        public ICommand RevealInExplorer => new RelayCommand<ISourceFile>(f => {
+                Process.Start("explorer.exe", "/select,\"" + f.AbsolutePath + "\"");
+            });
+
+        public ICommand OpenInVSCode => new RelayCommand<ISourceFile>(f => {
+                Process.Start(@"C:\Program Files\Microsoft VS Code\Code.exe", "\"" + f.AbsolutePath + "\"");
+            });
+
+        public ICommand CopyAbsolutePathToClipboard => new RelayCommand<ISourceFile>(f => {
+                Clipboard.SetText(f.AbsolutePath);
+            });
+
+        public ICommand CopyRelativePathToClipboard => new RelayCommand<ISourceFile>(f => {
+            Clipboard.SetText(f.MonoPath);
+        });
 
         void ReloadSourceFiles()
         {

@@ -42,6 +42,18 @@
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                      SelectedItem="{Binding SelectedSourceItem}"
                      ItemsSource="{Binding SourceItems}">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Reveal in Explorer" Command="{Binding RevealInExplorer}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                        <MenuItem Header="Open in VSCode" Command="{Binding OpenInVSCode}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                        <MenuItem Header="Copy absolute path to clipboard" Command="{Binding CopyAbsolutePathToClipboard}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                        <MenuItem Header="Copy relative path to clipboard" Command="{Binding CopyRelativePathToClipboard}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid x:Name="siGrid">
@@ -81,6 +93,18 @@
                      HorizontalContentAlignment="Stretch" Background="#FAFAFA"
                      SelectedItem="{Binding SelectedSourceItem.SelectedCandidateItem, Mode=TwoWay}"
                      ItemsSource="{Binding SelectedSourceItem.Candidates}">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Reveal in Explorer" Command="{Binding RevealInExplorer}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                        <MenuItem Header="Open in VSCode" Command="{Binding OpenInVSCode}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                        <MenuItem Header="Copy absolute path to clipboard" Command="{Binding CopyAbsolutePathToClipboard}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                        <MenuItem Header="Copy relative path to clipboard" Command="{Binding CopyRelativePathToClipboard}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid HorizontalAlignment="Stretch" Background="#48ADFF2F">

@@ -87,6 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Compile Include="CandidateItemViewModel.cs" />
+    <Compile Include="ISourceFile.cs" />
     <Compile Include="SourceItemViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

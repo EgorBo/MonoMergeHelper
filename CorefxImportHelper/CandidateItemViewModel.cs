@@ -6,7 +6,7 @@ using GalaSoft.MvvmLight.Command;
 
 namespace CorefxImportHelper
 {
-    public class CandidateItemViewModel : ViewModelBase
+    public class CandidateItemViewModel : ViewModelBase, ISourceFile
     {
         private readonly Action<string> _runExternalDiff;
         private readonly Action<string> _useMe;
@@ -32,5 +32,7 @@ namespace CorefxImportHelper
         public ICommand RunExternalDiff => new RelayCommand(() => _runExternalDiff(OriginalPath));
 
         public ICommand UseMe => new RelayCommand(() => _useMe(OriginalPath));
+
+        public string AbsolutePath => OriginalPath;
     }
 }
